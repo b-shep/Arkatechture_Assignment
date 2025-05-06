@@ -1,5 +1,7 @@
 import csv
 import os
+
+from src import db
 from src.models.column_metadata import ColumnMetadata
 from src.models.schema_metadata import SchemaMetadata
 from src.models.metadata import Metadata
@@ -29,21 +31,6 @@ def load_metadata(metadata_file_path: str):
 
     return metadata
 
-def create_tables(metadata: Metadata):
-    with get_connection() as conn:
-        with conn.cursor() as cursor:
-            for schema_name, schema in metadata.schemas.items():
-                create_schema_query = f'CREATE SCHEMA IF NOT EXISTS "{schema_name}";'
-                cursor.execute(create_schema_query)
-
-                for table_name, table in schema.tables.items():
-                    column_definitions = ', '.join([f'"{col.name}" {col.data_type}' for col in table.columns])
-                    qualified_table_name = f'"{schema_name}"."{table_name}"'
-                    create_table_query = f'CREATE TABLE IF NOT EXISTS {qualified_table_name} ({column_definitions})'
-                    cursor.execute(create_table_query)
-
-            conn.commit()
-
 def insert_data(metadata: Metadata, data_file_path: str):
     with get_connection() as conn:
         with conn.cursor() as cursor:
@@ -65,22 +52,7 @@ def insert_data(metadata: Metadata, data_file_path: str):
                             # Handle column additions and removals
                             validate_columns(csv_columns, table)
 
-                            inserted_count = 0
-                            for row in reader:
-                                # Set missing column values to NULL
-                                # With DictReader, name based access is utilized thus potential column transposition is handled
-                                values = [row.get(col.name, None) for col in table.columns]
-                                columns_str = ', '.join(f'"{col.name}"' for col in table.columns)
-                                placeholders = ', '.join(['%s'] * len(table.columns))
-                                insert_query = f'INSERT INTO "{schema_name}"."{table_name}" ({columns_str}) VALUES ({placeholders});'
-
-                                try:
-                                    cursor.execute(insert_query, values)
-                                    inserted_count += 1
-                                except Exception as e:
-                                    print(f"Insert failed for row: {row} with error: {e}")
-
-                            conn.commit()
+                            inserted_count = db.insert_data(conn, reader, cursor, schema_name, table)
 
                             # Prove all records in a given file were inserted successfully
                             validate_success(file, table_name, inserted_count)
