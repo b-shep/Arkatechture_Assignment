@@ -1,0 +1,8 @@
+/.env
+/src/data/ACCOUNTS.csv
+/src/data/CHECKING.csv
+/src/data/CUSTOM_FIELDS.csv
+/src/data/INFORMATION_SCHEMA.csv
+/src/data/LOANS.csv
+/src/data/MEMBERS.csv
+/src/data/TRANSACTIONS.csv
