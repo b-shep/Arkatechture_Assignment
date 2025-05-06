@@ -8,7 +8,7 @@ All 500 rows inserted successfully into MEMBERS.
 All 10000 rows inserted successfully into TRANSACTIONS.
 
 30 overdrawn accounts:
-Account e4c8c6c2-cf66-11ee-890c-e00af6801390 belonging to Karilynn Mcgee has an overdrawn balance of -81803.74
+Account e4c8c6c2-cf66-11ee-890c-e00af6801390 belonging to Karilynn Mcgee has an overdrawn balance of -81803.74 
 Account e4c8edd9-cf66-11ee-acad-e00af6801390 belonging to Paula Roach has an overdrawn balance of -15048.49
 Account e4c8f002-cf66-11ee-959c-e00af6801390 belonging to Philippa Sanford has an overdrawn balance of -26787.65
 Account e4c8f43d-cf66-11ee-8c00-e00af6801390 belonging to Annetta Cannon has an overdrawn balance of -3366.57
